@@ -9,9 +9,9 @@ To showcase fundamental backend engineering skills—specifically TCP/IP socket 
 
 ```mermaid
 sequenceDiagram
-    participant B1 as VibeBondhu (Client 1)
-    participant S as VibeSarkar (Server Router)
-    participant B2 as VibeBondhu (Client 2)
+    participant B1 as "VibeBondhu (Client 1)"
+    participant S as "VibeSarkar (Server Router)"
+    participant B2 as "VibeBondhu (Client 2)"
 
     B1->>S: Socket Connection Request
     S-->>B1: Accept & Spawn Handler Thread
