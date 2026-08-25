@@ -2,60 +2,66 @@
 
 A lightweight, multithreaded peer-to-peer data router and synchronization system built entirely using Core Java (JDK). This project demonstrates low-level socket programming, multithreaded concurrency management, and custom communication protocols without the use of external frameworks.
 
-## Features
+## 🎯 Purpose
+To showcase fundamental backend engineering skills—specifically TCP/IP socket programming, concurrent thread management, and the `java.net`/`java.io` packages—by building a real-time messaging system from scratch.
 
-- **Multithreaded Boss Router**: A central server (`VibeSarkar`) that handles concurrent client connections using thread-per-connection architecture.
-- **Asynchronous Peer Clients**: Clients (`VibeBondhu`) utilize separate threads for non-blocking message listening and broadcasting.
-- **Real-time Synchronization**: Instant data routing across all connected peers.
-- **Global Utilities**: A dedicated utility system (`VibeGulo`) for string manipulation and global constants.
-- **Custom Protocol**: Implementation of a persistent TCP-based communication layer.
+## 📸 Architecture & Workflow
 
-## Project Structure
+```mermaid
+sequenceDiagram
+    participant B1 as VibeBondhu (Client 1)
+    participant S as VibeSarkar (Server Router)
+    participant B2 as VibeBondhu (Client 2)
 
-- `VibeSarkar.java`: The central routing server.
-- `VibeBondhu.java`: The peer client application.
-- `BhaibePotol.java`: Data packet structure for synchronization.
-- `VibeGulo.java`: Global utility and constant library.
+    B1->>S: Socket Connection Request
+    S-->>B1: Accept & Spawn Handler Thread
+    
+    B2->>S: Socket Connection Request
+    S-->>B2: Accept & Spawn Handler Thread
 
-## Getting Started
+    B1->>S: Send Data (BhaibePotol Object)
+    note right of S: Loop through CopyOnWriteArrayList
+    S->>B2: Broadcast Message
+    S->>B1: Echo (Confirmation)
+```
+
+## ✨ Features
+*   **Multithreaded Boss Router (`VibeSarkar`)**: A central server that handles concurrent client connections using a thread-per-connection architecture.
+*   **Asynchronous Peer Clients (`VibeBondhu`)**: Clients utilize separate threads for non-blocking message listening and broadcasting, ensuring the UI/input stream never blocks incoming messages.
+*   **Thread-Safe State Management**: Utilizes `CopyOnWriteArrayList` to ensure safe, concurrent broadcast operations across multiple client threads without `ConcurrentModificationException`.
+*   **Custom Communication Protocol**: Implements persistent TCP streams using `BufferedReader` and `PrintWriter`, including a custom `ulta:` command prefix to broadcast reversed messages.
+
+## 💻 Code Style Note
+*This project intentionally features "weird code" formatting and non-English variable names (e.g., `VibeSarkar` for Server, `VibeBondhu` for Client) as a stylistic experiment. The underlying Java implementation strictly adheres to object-oriented and concurrency best practices.*
+
+## ⚙️ Setup & Installation
 
 ### Prerequisites
+*   Java Development Kit (JDK) 8+
 
-- Java Development Kit (JDK) 8 or higher installed on your system.
-
-### Compilation
-
-Compile all source files using the Java compiler:
-
+### 1. Compilation
+Compile all source files:
 ```bash
 javac *.java
 ```
 
-### Execution
+### 2. Execution
+**Start the Router (Server):**
+```bash
+java VibeSarkar
+```
+*(The server will start listening for connections on port 8080).*
 
-1. **Start the Router (Server):**
-   ```bash
-   java VibeSarkar
-   ```
-   The server will start listening for connections on port 8080.
+**Start Peer Clients:**
+Open multiple terminals and run the client in each:
+```bash
+java VibeBondhu
+```
 
-2. **Start Peer Clients:**
-   Open multiple terminals and run the client:
-   ```bash
-   java VibeBondhu
-   ```
+**Usage:**
+- Type any message to broadcast it to all other connected peers.
+- Type `ulta:hello` to broadcast the message in reverse ("olleh").
+- Type `exit` to cleanly close the socket and terminate the thread.
 
-3. **Usage:**
-   - Type any message to broadcast it to all other connected peers.
-   - Use the prefix `ulta:` (e.g., `ulta:hello`) to broadcast a reversed version of the message.
-   - Type `exit` to disconnect.
-
-## Technical Implementation Details
-
-- **Concurrency**: Utilizes `Thread` and `CopyOnWriteArrayList` to ensure thread-safe broadcast operations.
-- **Networking**: Implements `ServerSocket` for incoming connections and persistent `Socket` streams for bi-directional communication.
-- **I/O Management**: Uses `BufferedReader` and `PrintWriter` for efficient character-stream handling over network sockets.
-
-## License
-
-MIT
+---
+*Created by [Shahid](https://github.com/12345Shahid)*
